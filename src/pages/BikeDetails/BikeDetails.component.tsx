@@ -19,6 +19,9 @@ import {
   OverviewContainer,
   PriceRow,
 } from './BikeDetails.styles'
+import { useState } from 'react'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 interface BikeDetailsProps {
   bike?: Bike
@@ -30,6 +33,19 @@ const BikeDetails = ({ bike }: BikeDetailsProps) => {
 
   const servicesFee = getServicesFee(rateByDay)
   const total = rateByDay + servicesFee
+
+  const currentDate = new Date()
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear())
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth())
+
+  const currentMonthName = new Date(currentYear, currentMonth, 1).toLocaleDateString('en-US', { month: 'long' })
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+  const days = new Array(daysInMonth).fill(0).map((_, i) => i + 1)
+
+  const isPreviousMonthInThePast = currentYear == currentDate.getFullYear() && currentMonth < currentDate.getMonth() + 1
+
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   return (
     <div data-testid='bike-details-page'>
@@ -114,6 +130,83 @@ const BikeDetails = ({ bike }: BikeDetailsProps) => {
           <Typography variant='h2' fontSize={16} marginBottom={1.25}>
             Booking Overview
           </Typography>
+
+          <div style={{ backgroundColor: '#1e49cc', borderRadius: '25px', padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px' }}>
+              <div>
+                <p style={{ fontSize: '24px', color: 'white', fontWeight: 'bold' }}>{currentMonthName}</p>
+                <p style={{ color: '#8fa4e5' }}>{currentYear}</p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '4px' }}>
+                <button
+                  style={{ display: 'flex', justifyContent: 'center', color: isPreviousMonthInThePast ? '#8fa4e5' : 'white', backgroundColor: '#1e49cc', border: isPreviousMonthInThePast ? '1px solid #8fa4e5' : '1px solid white', padding: '8px', borderRadius: '15px' }}
+                  disabled={isPreviousMonthInThePast}
+                  onClick={() => {
+                    if (currentMonth > 0)
+                      setCurrentMonth(m => m - 1)
+                    else {
+                      setCurrentMonth(11)
+                      setCurrentYear(y => y - 1)
+                    }
+                  }}>
+                  <ChevronLeftIcon />
+                </button>
+                <button
+                  style={{ display: 'flex', justifyContent: 'center', color: 'white', backgroundColor: '#1e49cc', border: '1px solid white', padding: '8px', borderRadius: '15px' }}
+                  onClick={() => {
+                    if (currentMonth < 11)
+                      setCurrentMonth(m => m + 1)
+                    else {
+                      setCurrentMonth(0)
+                      setCurrentYear(y => y + 1)
+                    }
+                  }}>
+                  <ChevronRightIcon />
+                </button>
+              </div>
+            </div>
+
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 30px)', backgroundColor: '#1e49cc', color: 'white' }}>
+              {days.map(day => {
+                const isDayInThePast = isPreviousMonthInThePast && day < currentDate.getDate()
+                const month = currentMonth + 1
+                const date = `${currentYear}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
+                const isStartDate = date == startDate
+                const isEndDate = date == endDate
+                const isEdge = isStartDate || isEndDate
+                const isBetweenEdges = startDate < date && date < endDate
+
+                const backgroundColor = isEdge ? 'white' : isBetweenEdges ? '#5071d7' : ''
+                const color = isEdge ? 'blue' : isBetweenEdges ? 'white' : isDayInThePast ? '#8fa4e5': ''
+                const borderRadius = isBetweenEdges ? '' : '100%'
+                const margin = isBetweenEdges ? ' 0 -7px 0 -7px' : ''
+                const zIndex = isEdge ? '1' : ''
+
+                return <div
+                  key={day}
+                  style={{ margin, zIndex,  backgroundColor, color, borderRadius, display: 'flex', justifyContent: 'center', padding: '4px 8px' }}
+                  onClick={() => {
+                    if (isDayInThePast)
+                      return
+                    if (!startDate)
+                      setStartDate(date)
+                    else if (startDate <= date)
+                      setEndDate(date)
+                  }}
+                >{day}</div>
+              })}
+            </div>
+          </div>
+
+          <p>
+            {startDate} {endDate && '-'} {endDate}
+          </p>
+          <button onClick={() => {
+            setStartDate('')
+            setEndDate('')
+          }}>CLEAR</button>
 
           <Divider />
 
