@@ -2,6 +2,7 @@ import Bike from 'models/Bike'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import BikeDetails from './BikeDetails.component'
+import apiClient from 'services/api'
 
 type StateReceived = {
   bike: Bike
@@ -19,7 +20,7 @@ const BikeDetailsContainer = () => {
     }
   }, [])
 
-  return <BikeDetails bike={currentBikeData} />
+  return <BikeDetails bike={currentBikeData} rentRequest={apiClient.post}/>
 }
 
 export default BikeDetailsContainer

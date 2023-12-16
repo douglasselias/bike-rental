@@ -32,14 +32,15 @@ Open questions:
 - how the user should edit the time after making a selection. should go through the calendar again?
 - maybe have a month selector?
 - maybe have a year selector?
+- must reload page to de-select range
+- how to show error messages?
+- handle already rent days
 
 Testing plan:
 - select one day
 - select multiple days in the same week/row
 - select multiple days in different weeks/rows
-- select multiple days in different weeks/rows where final date is in the past
 - select multiple days in different months
-- select multiple days in different years
 - show a thank you message
 
 ---
