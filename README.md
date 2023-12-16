@@ -1,49 +1,72 @@
 # Bike Rental Boilerplate - ReactJS
 
-React date range picker for renting a bike.
-Author: Douglas
+React date range picker for renting a bike
+
+Author: Douglas S. Elias
 Objective: Create a date range picker
 
-Glossary:
-current implementation: none
-range picker: input for selecting a date range in a calendar
 
 Overview:
-the user needs a way to select the period of time that it wishes
-to rent the bike
+The user needs a way to select the period of time that it wishes to rent a bike.
+
+
 
 there is no way to select date.
+
 proposal is this:
+
 ![proposal](image.png)
+
+
 
 Design discussion:
 design shows a simple one-month view. for selecting multiple
+
 months need to click on the arrow. cannot go in the past.
+
 past days are disabled. cannot change year, must go through each month.
+
 must click on the start and end date? for single day just one click;
+
 add a time picker. after selecting the days shows a time picker.
+
 price update automatically after selection. price has no fraction by hour
+
 so one hour in one day counts a full day.
+
+
 
 ![time picker](image-1.png)
 
+
+
 Open questions:
 - whats the best approach for selecting the time?
+
 - how the user should edit the time after making a selection. should go through the calendar again?
+
 - maybe have a month selector?
+
 - maybe have a year selector?
+
 - must reload page to de-select range
+
 - how to show error messages?
+
 - handle already rent days
+
+
 
 Testing plan:
 - select one day
-- select multiple days in the same week/row
-- select multiple days in different weeks/rows
-- select multiple days in different months
-- show a thank you message
 
----
+- select multiple days in the same week/row
+
+- select multiple days in different weeks/rows
+
+- select multiple days in different months
+
+- show a "thank you" message
 
 - Create a rent component inside of the bike-detail page (see Figma)
 - Whenever the user picks a Date range, the system displays the final amount and fees
